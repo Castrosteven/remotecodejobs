@@ -20,20 +20,21 @@ model Company {
 }
 
 model Job {
-  id          Int       @id @default(autoincrement())
-  title       String
-  description String
-  company     Company   @relation("CompanyJobs", fields: [companyId], references: [id])
-  companyId   Int
-  location    String
-  minSalary   Int?
-  maxSalary   Int?
-  postedAt    DateTime  @default(now())
-  expiresAt   DateTime?
-  employer    User      @relation("JobEmployer", fields: [employerId], references: [id])
-  employerId  Int
-  applicants  User[]    @relation("JobApplicants")
-  jobType     JobType   @default(FULL_TIME)
+  id             Int       @id @default(autoincrement())
+  title          String
+  description    String
+  company        Company   @relation("CompanyJobs", fields: [companyId], references: [id])
+  companyId      Int
+  location       String
+  companyLogoUrl String?   @default("https://cdn-icons-png.flaticon.com/512/1465/1465405.png")
+  minSalary      Int?
+  maxSalary      Int?
+  postedAt       DateTime  @default(now())
+  expiresAt      DateTime?
+  employer       User      @relation("JobEmployer", fields: [employerId], references: [id])
+  employerId     Int
+  applicants     User[]    @relation("JobApplicants")
+  jobType        JobType   @default(FULL_TIME)
 }
 
 model User {

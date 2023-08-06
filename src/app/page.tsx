@@ -3,10 +3,13 @@ import fetcher from "@/utils/fetcher";
 import { FormattedJobTypes } from "@/utils/formatters";
 import { Company, Job, JobType } from "@prisma/client";
 import { useState } from "react";
+
 import useSWR from "swr";
 
 const Home = () => {
   const [jobType, setJobType] = useState<JobType | string>("");
+  const [keyword, setKeyword] = useState("");
+  const [location, setLocation] = useState("");
   const {
     data: jobs,
     mutate,
@@ -15,13 +18,16 @@ const Home = () => {
   } = useSWR<Array<{ company: Company } & Job>>(
     `/api/jobs?${new URLSearchParams({
       jobType: jobType,
+      keyword: keyword,
+      location: location,
     })}`,
     fetcher
   );
 
-  if (isLoading) {
-    return <div>....</div>;
-  }
+  const clearItems = () => {
+    setJobType("");
+  };
+
   const JobTypeclickHandler = (job: string) => {
     if (jobType === job) {
       setJobType("");
@@ -38,7 +44,6 @@ const Home = () => {
             <h1 className="text-2xl font-bold text-center md:text-left">
               Find Your Dream Job
             </h1>
-            <input type="checkbox" className="toggle hidden md:flex" checked />
           </div>
           <p className="text-sm font-light text-center md:text-left">
             Looking for Jobs? Browse our latest job openings to view & apply to
@@ -53,7 +58,9 @@ const Home = () => {
           <div className="flex justify-between items-center  border-b border-base-300 p-4">
             <div>Filter</div>
             <div>
-              <button className="btn btn-ghost">Clear All</button>
+              <button className="btn btn-ghost" onClick={clearItems}>
+                Clear All
+              </button>
             </div>
           </div>
           <div className="p-4">
@@ -66,9 +73,10 @@ const Home = () => {
                     <label className="label flex items-center justify-start gap-2">
                       <input
                         type="checkbox"
+                        value={jobType}
                         checked={jobType === job}
                         className="checkbox"
-                        onClick={() => {
+                        onChange={() => {
                           JobTypeclickHandler(job);
                         }}
                       />
@@ -88,10 +96,18 @@ const Home = () => {
             <input
               className="input input-bordered join-item w-full "
               placeholder="Search Job Title or Keyword"
+              value={keyword}
+              onChange={(e) => {
+                setKeyword(e.target.value);
+              }}
             />
             <input
               className="input input-bordered join-item w-full "
               placeholder="Country or timezone"
+              value={location}
+              onChange={(e) => {
+                setLocation(e.target.value);
+              }}
             />
             <button className="btn">Search</button>
           </div>
@@ -103,30 +119,46 @@ const Home = () => {
             {jobs &&
               jobs.map(
                 (
-                  { company, description, jobType, location, title, postedAt },
+                  {
+                    company,
+                    description,
+                    jobType,
+                    location,
+                    title,
+                    postedAt,
+                    companyLogoUrl,
+                  },
                   index
                 ) => {
                   const { name } = company;
                   return (
                     <div
                       key={index}
-                      className="flex flex-col  p-4 rounded-lg border-2 border-base-300 cursor-pointer hover:shadow-lg"
+                      className="flex flex-col p-4 gap-5 rounded-lg border-2 border-base-300 cursor-pointer hover:shadow-lg"
                     >
                       <div className="flex justify-between">
-                        <div className="flex items-center">
+                        <div className="flex items-center gap-5">
                           <div>
-                            <img src={""} height={50} width={50} alt="" />
+                            <img
+                              src={companyLogoUrl || ""}
+                              height={75}
+                              width={75}
+                              alt={name}
+                            />
                           </div>
                           <div className="flex flex-col">
-                            <div>{title}</div>
+                            <span className="font-semibold">{title}</span>
                             <div>
-                              {name} - {jobType} - High Priority
+                              {name} - {FormattedJobTypes[jobType]}
                             </div>
                           </div>
                         </div>
                         <div className="flex flex-col">
                           <div>{location}</div>
-                          <div>{new Date(postedAt).toLocaleDateString()}</div>
+                          <div className="flex gap-2 items-center text-sm">
+                            <span className=" ">Posted</span>
+                            {new Date(postedAt).toLocaleDateString()}
+                          </div>
                         </div>
                       </div>
                       <div>{description}</div>
