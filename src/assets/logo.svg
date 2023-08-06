@@ -1,0 +1,16 @@
+<svg width="199" height="199" viewBox="0 0 199 199" fill="none" xmlns="http://www.w3.org/2000/svg">
+ <style>
+        path {
+            stroke: black;
+        }
+        @media (prefers-color-scheme: dark) {
+            path { stroke: white; }
+        }
+    </style>
+<path d="M63.7671 175.548C-9.33734 175.548 -7.67198 175.548 22.789 98.9518V147.765" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M184.182 112.587C170.5 112.029 96.4066 111.342 91.0451 117.183C83.3106 125.608 64.1768 183.772 71.8371 194.897C123.895 195.977 163.262 197.131 170.962 193.776C174.936 192.045 178.11 187.067 179.88 182.568C181.281 179.005 196 124.692 196 123.161" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M69.3252 194.396C58.3193 189.867 46.7792 185.885 36.1832 179.959" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M37.8592 36.295C20.6694 97.7956 97.5765 123.843 117.943 62.0066C128.984 28.485 91.8377 -20.8569 53.7617 16.1777" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M91.1601 60.6581C91.8643 58.5854 92.3666 57.37 92.7602 55.3596" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M75.269 60.2983C76.0078 58.6461 76.1302 57.1649 76.4191 55.2966" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,95 +1,143 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+import fetcher from "@/utils/fetcher";
+import { FormattedJobTypes } from "@/utils/formatters";
+import { Company, Job, JobType } from "@prisma/client";
+import { useState } from "react";
+import useSWR from "swr";
 
-export default function Home() {
+const Home = () => {
+  const [jobType, setJobType] = useState<JobType | string>("");
+  const {
+    data: jobs,
+    mutate,
+    error,
+    isLoading,
+  } = useSWR<Array<{ company: Company } & Job>>(
+    `/api/jobs?${new URLSearchParams({
+      jobType: jobType,
+    })}`,
+    fetcher
+  );
+
+  if (isLoading) {
+    return <div>....</div>;
+  }
+  const JobTypeclickHandler = (job: string) => {
+    if (jobType === job) {
+      setJobType("");
+    } else {
+      setJobType(job);
+    }
+  };
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className="h-screen flex flex-col gap-4">
+      {/* Top Section */}
+      <div className=" flex items-center ">
+        <div className="flex flex-col container mx-auto gap-4">
+          <div className="md:flex justify-between">
+            <h1 className="text-2xl font-bold text-center md:text-left">
+              Find Your Dream Job
+            </h1>
+            <input type="checkbox" className="toggle hidden md:flex" checked />
+          </div>
+          <p className="text-sm font-light text-center md:text-left">
+            Looking for Jobs? Browse our latest job openings to view & apply to
+            the best jobs today!
+          </p>
         </div>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
-}
+      {/* Main Section */}
+      <main className="flex gap-4 container mx-auto">
+        {/* Left Filter Section */}
+        <div className="border border-base-300 rounded-md  hidden md:flex flex-col w-96 min-w-min">
+          <div className="flex justify-between items-center  border-b border-base-300 p-4">
+            <div>Filter</div>
+            <div>
+              <button className="btn btn-ghost">Clear All</button>
+            </div>
+          </div>
+          <div className="p-4">
+            {/* Job Type */}
+            <p className="font-semibold">Job Type</p>
+            <div className="grid grid-cols-2 gap-2">
+              {Object.values(JobType).map((job, index) => {
+                return (
+                  <div key={index} className="form-control">
+                    <label className="label flex items-center justify-start gap-2">
+                      <input
+                        type="checkbox"
+                        checked={jobType === job}
+                        className="checkbox"
+                        onClick={() => {
+                          JobTypeclickHandler(job);
+                        }}
+                      />
+                      <span className="label-text">
+                        {FormattedJobTypes[job]}
+                      </span>
+                    </label>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+        {/* Jobs Section */}
+        <div className="border border-base-300 rounded-md p-4 flex flex-col gap-4 w-full">
+          <div className="join-vertical md:join-horizontal join gap-5 md:gap-0 ">
+            <input
+              className="input input-bordered join-item w-full "
+              placeholder="Search Job Title or Keyword"
+            />
+            <input
+              className="input input-bordered join-item w-full "
+              placeholder="Country or timezone"
+            />
+            <button className="btn">Search</button>
+          </div>
+          <div className="divider md:hidden"></div>
+          <div>
+            <p>{jobs?.length} Job Resuls</p>
+          </div>
+          <div className="flex flex-col gap-4 ">
+            {jobs &&
+              jobs.map(
+                (
+                  { company, description, jobType, location, title, postedAt },
+                  index
+                ) => {
+                  const { name } = company;
+                  return (
+                    <div
+                      key={index}
+                      className="flex flex-col  p-4 rounded-lg border-2 border-base-300 cursor-pointer hover:shadow-lg"
+                    >
+                      <div className="flex justify-between">
+                        <div className="flex items-center">
+                          <div>
+                            <img src={""} height={50} width={50} alt="" />
+                          </div>
+                          <div className="flex flex-col">
+                            <div>{title}</div>
+                            <div>
+                              {name} - {jobType} - High Priority
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex flex-col">
+                          <div>{location}</div>
+                          <div>{new Date(postedAt).toLocaleDateString()}</div>
+                        </div>
+                      </div>
+                      <div>{description}</div>
+                    </div>
+                  );
+                }
+              )}
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+};
+export default Home;
