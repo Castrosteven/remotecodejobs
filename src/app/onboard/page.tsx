@@ -1,24 +1,62 @@
-'use client'
-import EmployerOnboardingForm from "@/components/Onboarding/NewEmployer"
+"use client";
+import Link from "next/link";
+import React, { useState } from "react";
 
-interface FormData {
-    companyName: string;
-    industry: string;
-    description: string;
-    contactEmail: string;
-}
-const Onboard = () => {
-    const handleOnSubmit = (formData: FormData) => {
-        console.log('Form data submitted:', formData);
-        // Here you can send the form data to your API or perform other actions
-    };
+const RegistrationForm = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
 
-
-    return (
-        <div className=" min-h-screen p-6">
-            <EmployerOnboardingForm onSubmit={handleOnSubmit} />
+  return (
+    <div className="hero min-h-screen bg-base-200 ">
+      <div className="hero-content flex-col lg:flex-row-reverse">
+        <div className="text-center lg:text-left">
+          <h1 className="text-5xl font-bold">Login now!</h1>
+          <p className="py-6">
+            Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
+            excepturi exercitationem quasi. In deleniti eaque aut repudiandae et
+            a id nisi.
+          </p>
         </div>
-    )
-}
+        <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+          <div className="card-body">
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Email</span>
+              </label>
+              <input
+                type="text"
+                placeholder="email"
+                className="input input-bordered"
+              />
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Password</span>
+              </label>
+              <input
+                type="text"
+                placeholder="password"
+                className="input input-bordered"
+              />
+              <label className="label">
+                <a href="#" className="label-text-alt link link-hover">
+                  Forgot password?
+                </a>
+              </label>
+            </div>
+            <div className="form-control mt-6">
+              <Link href={"/dashboard"} className="btn btn-primary">
+                Login
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-export default Onboard
+export default RegistrationForm;

@@ -36,7 +36,7 @@ const Home = () => {
     }
   };
   return (
-    <div className="h-screen flex flex-col gap-4">
+    <div className="h-screen flex flex-col gap-4 mt-4">
       {/* Top Section */}
       <div className=" flex items-center ">
         <div className="flex flex-col container mx-auto gap-4">
