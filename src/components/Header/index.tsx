@@ -1,8 +1,12 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
-
+import { BsGoogle } from "react-icons/bs";
 import Logo from "../../assets/logo.svg";
+import { signIn, signOut, useSession } from "next-auth/react";
+
 const Header = () => {
+  const { data: session, status } = useSession();
   return (
     <div className="bg-base-200 border-b-2 border-base-300">
       <div className="navbar flex justify-center items-center md:justify-between container mx-auto">
@@ -34,9 +38,22 @@ const Header = () => {
           </ul>
         </nav>
         <div className="hidden md:flex">
-          <Link href={"/onboard"} className="btn btn-primary">
-            Login
-          </Link>
+          {status !== "loading" && status === "unauthenticated" ? (
+            <button
+              onClick={() => {
+                signIn("google");
+              }}
+              className="btn btn-ghost"
+            >
+              Login with <BsGoogle />
+            </button>
+          ) : (
+            status === "authenticated" && (
+              <button className="btn btn-neutral" onClick={() => signOut()}>
+                Sign Out
+              </button>
+            )
+          )}
         </div>
       </div>
     </div>
