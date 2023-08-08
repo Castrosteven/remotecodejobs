@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 const Upload = () => {
   const [newJobFields, setNewJobFields] = useState({
     description: "",
