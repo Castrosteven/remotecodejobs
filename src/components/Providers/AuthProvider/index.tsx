@@ -14,7 +14,11 @@ export default function NextAuthProvider({
 export const LoadingWrapper = ({ children }: { children: ReactNode }) => {
   const { status } = useSession();
   if (status === "loading") {
-    return <div>loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-full">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
   }
   return <>{children}</>;
 };

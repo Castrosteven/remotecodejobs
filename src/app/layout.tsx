@@ -5,6 +5,8 @@ import { Inter } from "next/font/google";
 import NextAuthProvider, {
   LoadingWrapper,
 } from "@/components/Providers/AuthProvider";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +24,7 @@ export default function RootLayout({
     <NextAuthProvider>
       <html lang="en" data-theme="light">
         <body className={`${inter.className} flex flex-col h-screen`}>
+          <ToastContainer />
           <LoadingWrapper>
             <Header />
             {children}

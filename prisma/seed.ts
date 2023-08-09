@@ -1,77 +1,69 @@
-import { JobType, PrismaClient } from '@prisma/client';
+// This is a seed file to generate mock data for your Prisma schema
 
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-async function seed() {
+async function main() {
+  // Create mock data for users
   const user1 = await prisma.user.create({
     data: {
-      username: 'employer1',
-      email: 'employer1@example.com',
-      firstName: 'John',
-      lastName: 'Doe',
-      role: 'EMPLOYER',
+      name: "John Doe",
+      email: "john@example.com",
+      emailVerified: new Date(),
+      image: "https://randomuser.me/api/portraits/men/1.jpg",
+      role: "APPLICANT",
     },
   });
 
   const user2 = await prisma.user.create({
     data: {
-      username: 'applicant1',
-      email: 'applicant1@example.com',
-      firstName: 'Jane',
-      lastName: 'Smith',
-      role: 'APPLICANT',
+      name: "Jane Smith",
+      email: "jane@example.com",
+      emailVerified: new Date(),
+      image: "https://randomuser.me/api/portraits/women/2.jpg",
+      role: "EMPLOYER",
     },
   });
 
+  // Create mock data for companies
   const company1 = await prisma.company.create({
     data: {
-      name: 'Tech Innovators',
-      description: 'A leading technology company focused on innovation.',
+      name: "ABC Corp",
+      description: "A tech company",
+      website: "https://www.abccorp.com",
     },
   });
 
-  const company2 = await prisma.company.create({
+  // Create mock data for jobs
+  const job1 = await prisma.job.create({
     data: {
-      name: 'Marketing Solutions',
-      description: 'A creative marketing agency specializing in digital campaigns.',
+      title: "Software Engineer",
+      description: "Develop software applications",
+      company: { connect: { id: company1.id } },
+      location: "Remote",
+      minSalary: 60000,
+      maxSalary: 100000,
+      employer: { connect: { id: user2.id } },
     },
   });
 
-  const jobsToCreate = [
-    {
-      title: 'Frontend Developer',
-      description: 'Looking for a skilled frontend developer to create responsive and user-friendly interfaces.',
-      location: 'San Francisco, CA',
-      minSalary: 70000,
-      maxSalary: 100000,
-      jobType: JobType['FULL_TIME'],
-      companyId: company1.id,
-      employerId: user1.id,
+  // Create mock data for accounts
+  const account1 = await prisma.account.create({
+    data: {
+      userId: user1.id,
+      type: "oauth",
+      provider: "Google",
+      providerAccountId: "google123",
     },
-    {
-      title: 'Marketing Intern',
-      description: 'Join our marketing team and gain hands-on experience in digital marketing strategies.',
-      location: 'Los Angeles, CA',
-      minSalary: 15000,
-      maxSalary: 25000,
-      jobType: JobType['PART_TIME'],
-      companyId: company2.id,
-      employerId: user1.id,
-    },
-  ];
+  });
 
-  for (const jobData of jobsToCreate) {
-    await prisma.job.create({
-      data: jobData,
-    });
-  }
-
-  console.log('Mock data seeded successfully.');
-
-  prisma.$disconnect();
+  console.log("Mock data generated.");
 }
 
-seed().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+main()
+  .catch((error) => {
+    console.error(error);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
