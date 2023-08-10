@@ -161,7 +161,13 @@ const Home = () => {
                           </div>
                         </div>
                       </div>
-                      <div>{description}</div>
+                      {/* <div>{description}</div> */}
+                      <div
+                        className="prose  max-w-full"
+                        dangerouslySetInnerHTML={{
+                          __html: description,
+                        }}
+                      ></div>
                     </div>
                   );
                 }

@@ -4,6 +4,17 @@ import { JobType, Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import util from "util";
+import * as yup from "yup";
+
+const schema = yup.object().shape({
+  description: yup.string().required("description is required"),
+  location: yup.string().required("location is required"),
+  title: yup.string().required("title is required"),
+  companyName: yup.string().required("companyName is required"),
+  companyWebsite: yup.string().required("companyWebsite is required"),
+  companyAddress: yup.string().required("companyAddress is required"),
+  companySize: yup.string().required("companySize is required"),
+});
 
 const fetchResults = async (req: NextApiRequest, res: NextApiResponse) => {
   const jobType = req.query?.jobType as JobType | undefined;
@@ -55,35 +66,46 @@ const fetchResults = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 const postNewJob = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { description, location, title } = req.body as {
-    description: string;
-    location: string;
-    title: string;
-  };
-  if (description && location && title) {
-    const session = await getServerSession(req, res, authOptions);
-    if (session) {
-      const email = session.user!.email;
-      const userAccount = await prisma.user.findUnique({
-        where: {
+  console.log(req.body);
+  // const isValid = await schema.isValid(req.body);
+  // if (!isValid) {
+  //   return res.status(400).json({ error: "Validation error" });
+  // }
+  await schema.validate(req.body);
+  const { description, location, title, companyName, companyWebsite } =
+    req.body as {
+      description: string;
+      location: string;
+      title: string;
+      companyName: string;
+      companyWebsite: string;
+      companyAddress: string;
+      companySize: string;
+    };
+  const session = await getServerSession(req, res, authOptions);
+  if (session) {
+    const email = session.user!.email;
+    const data: Prisma.JobCreateInput = {
+      title,
+      location,
+      description,
+      employer: {
+        connect: {
           email: email!,
         },
-        include: {},
-      });
-
-      res.status(200).json({ ok: true });
-    }
-    res.status(401).json({ error: "No User" });
-    // const data: Prisma.JobCreateInput = {
-    //   title,
-    //   location,
-    //   description,
-    // };
-    // TODO: Fetch Company and employer info from user
-  } else {
-    res.status(500).json({
-      error: "missing or empty fields. [Need description, location, title]",
+      },
+      company: {
+        create: {
+          description: "My Company",
+          name: companyName,
+          website: companyWebsite,
+        },
+      },
+    };
+    const response = await prisma.job.create({
+      data,
     });
+    return res.status(200).json(response);
   }
 };
 
@@ -91,17 +113,13 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  try {
+  if (req.method === "GET") {
     const session = await getServerSession(req, res, authOptions);
     console.log(session);
-    if (req.method === "GET") {
-      return await fetchResults(req, res);
-    }
-    if (req.method === "POST") {
-      return await postNewJob(req, res);
-    }
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json(error);
+    return await fetchResults(req, res);
+  } else if (req.method === "POST") {
+    return await postNewJob(req, res);
+  } else {
+    res.status(405).json({ error: "Method not allowed" });
   }
 }

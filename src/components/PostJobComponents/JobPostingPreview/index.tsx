@@ -1,7 +1,14 @@
 import { useFormState } from "@/context/FormContext";
+import axios from "axios";
 
 const PreviewJobPost = () => {
   const { formState, back, next } = useFormState();
+  const submitHandler = async () => {
+    const { data } = await axios.post("/api/jobs", {
+      ...formState,
+    });
+    console.log(data);
+  };
   return (
     <div className="w-full md:w-3/4 flex flex-col gap-5 h-full">
       <div className="card shadow-xl border w-full flex-1  overflow-y-scroll  ">
@@ -21,7 +28,7 @@ const PreviewJobPost = () => {
         <button onClick={back} className="btn btn-secondary">
           Back
         </button>
-        <button onClick={next} className="btn btn-primary">
+        <button onClick={submitHandler} className="btn btn-primary">
           Submit
         </button>
       </div>
