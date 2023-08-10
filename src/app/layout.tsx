@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <NextAuthProvider>
       <html lang="en" data-theme="light">
-        <body className={`${inter.className} flex flex-col h-screen`}>
+        <body className={`${inter.className} flex flex-col min-h-screen`}>
           <ToastContainer />
           <LoadingWrapper>
             <Header />

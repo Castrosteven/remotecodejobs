@@ -15,10 +15,10 @@ export const LoadingWrapper = ({ children }: { children: ReactNode }) => {
   const { status } = useSession();
   if (status === "loading") {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex items-center justify-center h-screen">
         <span className="loading loading-spinner loading-lg"></span>
       </div>
     );
   }
-  return <>{children}</>;
+  return <div className=" flex flex-col flex-1 h-full">{children}</div>;
 };

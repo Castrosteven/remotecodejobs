@@ -26,7 +26,7 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link className="link link-hover" href={"/"}>
+              <Link className="link link-hover" href={"/dashboard/post-job"}>
                 Upload Job
               </Link>
             </li>

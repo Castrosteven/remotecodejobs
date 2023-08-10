@@ -5,7 +5,7 @@ import { BiSolidDashboard, BiSolidCog } from "react-icons/bi";
 const Dashboard = ({ children }: { children: ReactNode }) => {
   return (
     <FormWrapper>
-      <div className=" flex flex-1 ">
+      <div className="flex flex-1  ">
         <ul className="menu bg-base-200 rounded-box m-4  flex-col gap-5 hidden md:flex">
           <li>
             <Link href={"/dashboard"} className="text-xl">
@@ -18,7 +18,7 @@ const Dashboard = ({ children }: { children: ReactNode }) => {
             </Link>
           </li>
         </ul>
-        <div className="w-full"> {children}</div>
+        <div className="w-full flex flex-1"> {children}</div>
       </div>
     </FormWrapper>
   );
