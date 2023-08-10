@@ -41,17 +41,20 @@ const fetchResults = async (req: NextApiRequest, res: NextApiResponse) => {
     if (keyword) {
       args.where!.description = {
         contains: keyword,
+        mode: "insensitive",
       };
     }
     if (location) {
       args.where!.location = {
         contains: location,
+        mode: "insensitive",
       };
     }
     if (keyword && location) {
       args.where!.AND = {
         location: {
           contains: location,
+          mode: "insensitive",
         },
       };
     }

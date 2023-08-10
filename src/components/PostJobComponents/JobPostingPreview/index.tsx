@@ -7,7 +7,7 @@ const PreviewJobPost = () => {
     const { data } = await axios.post("/api/jobs", {
       ...formState,
     });
-    console.log(data);
+    next();
   };
   return (
     <div className="w-full md:w-3/4 flex flex-col gap-5 h-full">
