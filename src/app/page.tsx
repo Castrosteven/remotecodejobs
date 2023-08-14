@@ -1,12 +1,13 @@
 "use client";
+import Table from "@/components/Table";
 import fetcher from "@/utils/fetcher";
 import { FormattedJobTypes } from "@/utils/formatters";
 import { Company, Job, JobType } from "@prisma/client";
 import { useState } from "react";
-
 import useSWR from "swr";
 
 const Home = () => {
+  const [currentPage, setCurrentPage] = useState(1);
   const [jobType, setJobType] = useState<JobType | string>("");
   const [keyword, setKeyword] = useState("");
   const [location, setLocation] = useState("");
@@ -15,11 +16,16 @@ const Home = () => {
     mutate,
     error,
     isLoading,
-  } = useSWR<Array<{ company: Company } & Job>>(
+  } = useSWR<{
+    jobs: Array<{ company: Company } & Job>;
+    count: number;
+  }>(
     `/api/jobs?${new URLSearchParams({
       jobType: jobType,
       keyword: keyword,
       location: location,
+      skip: currentPage == 1 ? (currentPage * 3).toString() : "0",
+      take: "3",
     })}`,
     fetcher
   );
@@ -36,7 +42,7 @@ const Home = () => {
     }
   };
   return (
-    <div className="h-screen flex flex-col gap-4 mt-4">
+    <div className="h-full flex flex-col gap-4 mt-5 mb-5">
       {/* Top Section */}
       <div className=" flex items-center ">
         <div className="flex flex-col container mx-auto gap-4">
@@ -52,7 +58,7 @@ const Home = () => {
         </div>
       </div>
       {/* Main Section */}
-      <main className="flex gap-4 container mx-auto">
+      <main className="flex gap-4 container mx-auto ">
         {/* Left Filter Section */}
         <div className="border border-base-300 rounded-md  hidden md:flex flex-col w-96 min-w-min">
           <div className="flex justify-between items-center  border-b border-base-300 p-4">
@@ -91,7 +97,7 @@ const Home = () => {
           </div>
         </div>
         {/* Jobs Section */}
-        <div className="border border-base-300 rounded-md p-4 flex flex-col gap-4 w-full">
+        <div className="border border-base-300 rounded-md p-4 flex flex-col gap-4 w-full h-full">
           <div className="join-vertical md:join-horizontal join gap-5 md:gap-0 ">
             <input
               className="input input-bordered join-item w-full "
@@ -112,66 +118,17 @@ const Home = () => {
             <button className="btn">Search</button>
           </div>
           <div className="divider md:hidden"></div>
-          <div>
-            <p>{jobs?.length} Job Resuls</p>
+          <div className="flex items-start">
+            <p>{jobs?.count} Job Resuls</p>
           </div>
-          <div className="flex flex-col gap-4 ">
-            {jobs &&
-              jobs.map(
-                (
-                  {
-                    company,
-                    description,
-                    jobType,
-                    location,
-                    title,
-                    postedAt,
-                    companyLogoUrl,
-                  },
-                  index
-                ) => {
-                  const { name } = company;
-                  return (
-                    <div
-                      key={index}
-                      className="flex flex-col p-4 gap-5 rounded-lg border-2 border-base-300 cursor-pointer hover:shadow-lg"
-                    >
-                      <div className="flex justify-between">
-                        <div className="flex items-center gap-5">
-                          <div>
-                            <img
-                              src={companyLogoUrl || ""}
-                              height={75}
-                              width={75}
-                              alt={name}
-                            />
-                          </div>
-                          <div className="flex flex-col">
-                            <span className="font-semibold">{title}</span>
-                            <div>
-                              {name} - {FormattedJobTypes[jobType]}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex flex-col">
-                          <div>{location}</div>
-                          <div className="flex gap-2 items-center text-sm">
-                            <span className=" ">Posted</span>
-                            {new Date(postedAt).toLocaleDateString()}
-                          </div>
-                        </div>
-                      </div>
-                      {/* <div>{description}</div> */}
-                      <div
-                        className="prose  max-w-full"
-                        dangerouslySetInnerHTML={{
-                          __html: description,
-                        }}
-                      ></div>
-                    </div>
-                  );
-                }
-              )}
+          <div className="flex flex-col gap-4 h-full overflow-y-scroll  ">
+            {jobs?.jobs && (
+              <Table
+                count={jobs.count}
+                jobs={jobs.jobs}
+                setCurrentPage={setCurrentPage}
+              />
+            )}
           </div>
         </div>
       </main>

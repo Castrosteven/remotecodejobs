@@ -1,7 +1,7 @@
 import { useFormState } from "@/context/FormContext";
 import axios from "axios";
 
-const PreviewJobPost = () => {
+const JobPostingPreview = () => {
   const { formState, back, next } = useFormState();
   const submitHandler = async () => {
     const { data } = await axios.post("/api/jobs", {
@@ -36,4 +36,4 @@ const PreviewJobPost = () => {
   );
 };
 
-export default PreviewJobPost;
+export default JobPostingPreview;

@@ -14,12 +14,16 @@ const schema = yup.object().shape({
   companyWebsite: yup.string().required("companyWebsite is required"),
   companyAddress: yup.string().required("companyAddress is required"),
   companySize: yup.string().required("companySize is required"),
+  skip: yup.string().required("skip is required"),
+  take: yup.string().required("take is required"),
 });
 
 const fetchResults = async (req: NextApiRequest, res: NextApiResponse) => {
   const jobType = req.query?.jobType as JobType | undefined;
   const keyword = req.query?.keyword as string | undefined;
   const location = req.query?.location as string | undefined;
+  const skip = req.query?.skip as string;
+  const take = req.query?.take as string;
 
   const createFindManyArgs = ({
     jobType,
@@ -64,8 +68,15 @@ const fetchResults = async (req: NextApiRequest, res: NextApiResponse) => {
   const args = createFindManyArgs({ jobType, keyword, location });
   console.log(util.inspect(args, false, null, true));
 
-  const jobs = await prisma.job.findMany(args);
-  res.status(200).json(jobs);
+  const count = await prisma.job.findMany(args);
+  console.log(count.length);
+  const jobs = await prisma.job.findMany({
+    ...args,
+    skip: Number(skip),
+    take: Number(take),
+  });
+
+  res.status(200).json({ jobs: jobs, count: count.length });
 };
 
 const postNewJob = async (req: NextApiRequest, res: NextApiResponse) => {

@@ -20,5 +20,7 @@ export const LoadingWrapper = ({ children }: { children: ReactNode }) => {
       </div>
     );
   }
-  return <div className=" flex flex-col flex-1 h-full">{children}</div>;
+  return (
+    <div className="text-center flex flex-col min-h-screen">{children}</div>
+  );
 };

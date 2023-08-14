@@ -1,13 +1,13 @@
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import NextAuthProvider, {
   LoadingWrapper,
 } from "@/components/Providers/AuthProvider";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,16 +21,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <NextAuthProvider>
-      <html lang="en" data-theme="light">
-        <body className={`${inter.className} flex flex-col min-h-screen`}>
-          <ToastContainer />
+    <html lang="en" data-theme="light">
+      <body className={`${inter.className} flex flex-col h-screen`}>
+        <NextAuthProvider>
           <LoadingWrapper>
+            <ToastContainer />
             <Header />
-            {children}
+            <div className="flex-1">{children}</div>
+            <Footer />
           </LoadingWrapper>
-        </body>
-      </html>
-    </NextAuthProvider>
+        </NextAuthProvider>
+      </body>
+    </html>
   );
 }

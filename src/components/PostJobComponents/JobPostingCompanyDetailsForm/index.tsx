@@ -29,7 +29,7 @@ const CompanyDetails = () => {
       <div className="flex gap-5">
         <div className="form-control w-full ">
           <label className="label">
-            <span className="label-text">Job Title</span>
+            <span className="label-text">Company Name</span>
           </label>
           <input
             required
@@ -43,7 +43,7 @@ const CompanyDetails = () => {
         </div>
         <div className="form-control w-full">
           <label className="label">
-            <span className="label-text">Location</span>
+            <span className="label-text">Address</span>
           </label>
           <input
             required
