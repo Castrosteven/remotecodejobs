@@ -2,9 +2,9 @@ import prisma from "@/utils/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import { JobType, Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import util from "util";
 import * as yup from "yup";
+import { authOptions } from "@/utils/auth";
 
 const schema = yup.object().shape({
   description: yup.string().required("description is required"),
