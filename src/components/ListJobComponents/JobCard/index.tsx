@@ -1,5 +1,6 @@
 import { IJob } from "@/components/Table";
 import { FormattedJobTypes } from "@/utils/formatters";
+import Image from "next/image";
 import Link from "next/link";
 const JobCard = ({
   companyLogoUrl,
@@ -20,7 +21,12 @@ const JobCard = ({
       <div className="flex justify-between">
         <div className="flex items-center gap-5">
           <div>
-            <img src={companyLogoUrl || ""} height={75} width={75} alt={name} />
+            <Image
+              src={companyLogoUrl || ""}
+              height={75}
+              width={75}
+              alt={name}
+            />
           </div>
           <div className="flex flex-col">
             <span className="font-semibold">
