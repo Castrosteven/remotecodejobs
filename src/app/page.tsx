@@ -11,12 +11,7 @@ const Home = () => {
   const [jobType, setJobType] = useState<JobType | string>("");
   const [keyword, setKeyword] = useState("");
   const [location, setLocation] = useState("");
-  const {
-    data: jobs,
-    mutate,
-    error,
-    isLoading,
-  } = useSWR<{
+  const { data: jobs } = useSWR<{
     jobs: Array<{ company: Company } & Job>;
     count: number;
   }>(
@@ -24,7 +19,7 @@ const Home = () => {
       jobType: jobType,
       keyword: keyword,
       location: location,
-      skip: currentPage == 1 ? (currentPage * 3).toString() : "0",
+      skip: `${currentPage === 1 ? 0 : (currentPage - 1) * 3}`,
       take: "3",
     })}`,
     fetcher
