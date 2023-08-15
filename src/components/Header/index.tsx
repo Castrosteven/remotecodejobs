@@ -39,14 +39,9 @@ const Header = () => {
         </nav>
         <div className="hidden md:flex">
           {status !== "loading" && status === "unauthenticated" ? (
-            <button
-              onClick={() => {
-                signIn("google");
-              }}
-              className="btn btn-ghost"
-            >
+            <Link href={"/login"} className="btn btn-ghost">
               Login with <BsGoogle />
-            </button>
+            </Link>
           ) : (
             status === "authenticated" && (
               <button className="btn btn-neutral" onClick={() => signOut()}>
