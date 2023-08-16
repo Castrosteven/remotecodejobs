@@ -16,7 +16,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           <span className="text-sm">{job.company.name}</span>
           <div className="divider"></div>
           <div
-            className="prose  max-w-full p-5 text-left"
+            className="prose max-w-full p-5 text-left"
             dangerouslySetInnerHTML={{ __html: job.description }}
           ></div>
         </div>
