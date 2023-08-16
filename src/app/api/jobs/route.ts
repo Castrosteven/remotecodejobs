@@ -1,29 +1,18 @@
 import prisma from "@/utils/prisma";
-import { NextApiRequest, NextApiResponse } from "next";
+import util from "util";
 import { JobType, Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth/next";
-import util from "util";
-import * as yup from "yup";
 import { authOptions } from "@/utils/auth";
+import { type NextRequest } from "next/server";
 
-const schema = yup.object().shape({
-  description: yup.string().required("description is required"),
-  location: yup.string().required("location is required"),
-  title: yup.string().required("title is required"),
-  companyName: yup.string().required("companyName is required"),
-  companyWebsite: yup.string().required("companyWebsite is required"),
-  companyAddress: yup.string().required("companyAddress is required"),
-  companySize: yup.string().required("companySize is required"),
-  skip: yup.string().required("skip is required"),
-  take: yup.string().required("take is required"),
-});
-
-const fetchResults = async (req: NextApiRequest, res: NextApiResponse) => {
-  const jobType = req.query?.jobType as JobType | undefined;
-  const keyword = req.query?.keyword as string | undefined;
-  const location = req.query?.location as string | undefined;
-  const skip = req.query?.skip as string;
-  const take = req.query?.take as string;
+const fetchResults = async (req: NextRequest) => {
+  const jobType = req.nextUrl.searchParams.get("jobType") as
+    | JobType
+    | undefined;
+  const keyword = req.nextUrl.searchParams.get("keyword") as string;
+  const location = req.nextUrl.searchParams.get("location") as string;
+  const skip = req.nextUrl.searchParams.get("skip");
+  const take = req.nextUrl.searchParams.get("take");
 
   const createFindManyArgs = ({
     jobType,
@@ -75,28 +64,16 @@ const fetchResults = async (req: NextApiRequest, res: NextApiResponse) => {
     skip: Number(skip),
     take: Number(take),
   });
-
-  res.status(200).json({ jobs: jobs, count: count.length });
+  return {
+    jobs: jobs,
+    count: count.length,
+  };
 };
 
-const postNewJob = async (req: NextApiRequest, res: NextApiResponse) => {
-  console.log(req.body);
-  // const isValid = await schema.isValid(req.body);
-  // if (!isValid) {
-  //   return res.status(400).json({ error: "Validation error" });
-  // }
-  await schema.validate(req.body);
+const postNewJob = async (req: NextRequest) => {
   const { description, location, title, companyName, companyWebsite } =
-    req.body as {
-      description: string;
-      location: string;
-      title: string;
-      companyName: string;
-      companyWebsite: string;
-      companyAddress: string;
-      companySize: string;
-    };
-  const session = await getServerSession(req, res, authOptions);
+    await req.json();
+  const session = await getServerSession(authOptions);
   if (session) {
     const email = session.user!.email;
     const data: Prisma.JobCreateInput = {
@@ -119,19 +96,19 @@ const postNewJob = async (req: NextApiRequest, res: NextApiResponse) => {
     const response = await prisma.job.create({
       data,
     });
-    return res.status(200).json(response);
+    return response;
   }
 };
-async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === "GET") {
-    return await fetchResults(req, res);
-  } else if (req.method === "POST") {
-    const session = await getServerSession(req, res, authOptions);
-    console.log(session);
-    return await postNewJob(req, res);
-  } else {
-    res.status(405).json({ error: "Method not allowed" });
-  }
+export async function GET(Request: NextRequest) {
+  const data = await fetchResults(Request);
+  return new Response(JSON.stringify(data), {
+    status: 200,
+  });
 }
 
-export { handler as GET, handler as POST };
+export async function POST(Request: NextRequest) {
+  const data = await postNewJob(Request);
+  return new Response(JSON.stringify(data), {
+    status: 200,
+  });
+}
