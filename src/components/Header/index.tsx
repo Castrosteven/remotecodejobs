@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { BsGoogle } from "react-icons/bs";
+import { FiLogOut } from "react-icons/fi";
 import Logo from "../../assets/logo.svg";
 import { signIn, signOut, useSession } from "next-auth/react";
 
@@ -43,10 +44,25 @@ const Header = () => {
               Login with <BsGoogle />
             </Link>
           ) : (
-            status === "authenticated" && (
-              <button className="btn btn-neutral" onClick={() => signOut()}>
-                Sign Out
-              </button>
+            status === "authenticated" &&
+            session.user && (
+              <div className="flex gap-2 items-center">
+                <div className="flex justify-center items-center flex-col">
+                  <Image
+                    alt={session.user.name || ""}
+                    src={session.user.image || ""}
+                    width={30}
+                    height={30}
+                    className="rounded-full"
+                  />
+                  <span className="text-sm">{session.user.name}</span>
+                </div>
+                <button className="btn btn-ghost" onClick={() => signOut()}>
+                  <span className="text-xl">
+                    <FiLogOut />
+                  </span>
+                </button>
+              </div>
             )
           )}
         </div>

@@ -30,38 +30,40 @@ const Table = ({
   });
 
   return (
-    <div>
-      <table className="table">
-        <tbody className="w-full">
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getAllCells().map((cell) => (
-                <td key={cell.id} className="w-full">
-                  <JobCard {...cell.row.original} />
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          <div className="flex justify-end p-5 w-full">
-            <div className="join">
-              {Array.from(Array(Math.ceil(count / 3)).keys()).map((index) => {
-                return (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentPage(index + 1)}
-                    className="join-item btn"
-                  >
-                    {index + 1}
-                  </button>
-                );
-              })}
+    <table className="flex flex-col gap-5 w-full table">
+      <tbody className=" ">
+        {table.getRowModel().rows.map((row) => (
+          <tr key={row.id} className="">
+            {row.getAllCells().map((cell) => (
+              <td key={cell.id}>
+                <JobCard {...cell.row.original} />
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+      <tfoot className="flex justify-end p-5 w-full">
+        <tr>
+          <td>
+            <div className="">
+              <div className="join">
+                {Array.from(Array(Math.ceil(count / 3)).keys()).map((index) => {
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentPage(index + 1)}
+                      className="join-item btn"
+                    >
+                      {index + 1}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        </tfoot>
-      </table>
-    </div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
   );
 };
 

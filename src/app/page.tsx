@@ -64,7 +64,7 @@ const Home = () => {
               </button>
             </div>
           </div>
-          <div className="p-4">
+          <div className="p-4 text-left">
             {/* Job Type */}
             <p className="font-semibold">Job Type</p>
             <div className="grid grid-cols-2 gap-2">
@@ -92,8 +92,8 @@ const Home = () => {
           </div>
         </div>
         {/* Jobs Section */}
-        <div className="border border-base-300 rounded-md p-4 flex flex-col gap-4 w-full h-full">
-          <div className="join-vertical md:join-horizontal join gap-5 md:gap-0 ">
+        <div className="border border-base-300 rounded-md p-4 flex flex-col gap-4 w-full h-full ">
+          <div className="join-vertical md:join-horizontal join gap-5 md:gap-0 pl-4 p-4 ">
             <input
               className="input input-bordered join-item w-full "
               placeholder="Search Job Title or Keyword"
@@ -116,7 +116,7 @@ const Home = () => {
           <div className="flex items-start">
             <p>{jobs?.count} Job Resuls</p>
           </div>
-          <div className="flex flex-col gap-4 h-full overflow-y-scroll  ">
+          <div className="flex flex-col gap-4 h-full overflow-y-scroll w-full ">
             {jobs?.jobs && (
               <Table
                 count={jobs.count}
