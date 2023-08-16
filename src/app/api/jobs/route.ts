@@ -122,18 +122,16 @@ const postNewJob = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200).json(response);
   }
 };
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
-    const session = await getServerSession(req, res, authOptions);
-    console.log(session);
     return await fetchResults(req, res);
   } else if (req.method === "POST") {
+    const session = await getServerSession(req, res, authOptions);
+    console.log(session);
     return await postNewJob(req, res);
   } else {
     res.status(405).json({ error: "Method not allowed" });
   }
 }
+
+export { handler as GET, handler as POST };
