@@ -9,4 +9,4 @@ export default withAuth(function middleware() {}, {
     verifyRequest: "",
   },
 });
-export const config = { matcher: "/dashboard" };
+export const config = { matcher: "/dashboard/:path*" };
