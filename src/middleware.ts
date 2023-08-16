@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 export default async function middleware(req: NextRequest) {
   // Get the pathname of the request (e.g. /, /protected)
   const path = req.nextUrl.pathname;
-  console.log(path);
   // If it's the root path, just render it
   if (path === "/") {
     return NextResponse.next();
@@ -19,7 +18,7 @@ export default async function middleware(req: NextRequest) {
 
   if (!session && isProtected) {
     return NextResponse.redirect(new URL("/login", req.url));
-  } else if (session && (path === "/login" || path === "/register")) {
+  } else if (session && path === "/login") {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
   return NextResponse.next();
