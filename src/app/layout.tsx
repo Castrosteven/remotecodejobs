@@ -4,12 +4,10 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
-
 import NextAuthProvider, {
   LoadingWrapper,
 } from "@/components/Providers/AuthProvider";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -28,7 +26,6 @@ export default function RootLayout({
         <NextAuthProvider>
           <Analytics />
           <LoadingWrapper>
-            <ToastContainer />
             <Header />
             <div className="flex-1">{children}</div>
             <Footer />

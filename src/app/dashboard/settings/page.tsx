@@ -21,20 +21,68 @@ type Action =
   | { type: "SET_LANGUAGE"; payload: Language }
   | { type: "SET_FRAMEWORK"; payload: Framework };
 
-const counterReducer = (state: State, action: Action): State => {
+const reducer = (state: State, action: Action): State => {
+  const listOfFrameworks = [
+    {
+      value: "Angular",
+      label: "Angular",
+      language: "Javascript",
+    },
+    {
+      value: "Next JS",
+      label: "Next JS",
+      language: "Javascript",
+    },
+    {
+      value: "Express JS",
+      label: "Express JS",
+      language: "Javascript",
+    },
+    {
+      value: "Svelte",
+      label: "Svelte",
+      language: "Javascript",
+    },
+    {
+      value: "Vue Js",
+      label: "Vue Js",
+      language: "Javascript",
+    },
+    {
+      value: "Gatsby",
+      label: "Gatsby",
+      language: "Javascript",
+    },
+    {
+      value: "React JS",
+      label: "React JS",
+      language: "Javascript",
+    },
+    {
+      value: "Flask",
+      label: "Flask",
+      language: "Python",
+    },
+    {
+      value: "Django",
+      label: "Django",
+      language: "Python",
+    },
+  ];
+  const filterFrameworks = listOfFrameworks.filter((framework) => {
+    return framework.language === action.payload.value;
+  });
   switch (action.type) {
     case "SET_LANGUAGE":
       return {
         ...state,
         language: action.payload,
-        frameworks: state.frameworks.filter(
-          (framework) => framework.language === action.payload.value
-        ),
         framework: {
           label: "",
           language: "",
           value: "",
         },
+        frameworks: filterFrameworks,
       };
     case "SET_FRAMEWORK":
       return { ...state, framework: action.payload };
@@ -102,53 +150,6 @@ const Settings = () => {
       label: "Julia",
     },
   ];
-  const frameworks = [
-    {
-      value: "Angular",
-      label: "Angular",
-      language: "Javascript",
-    },
-    {
-      value: "Next JS",
-      label: "Next JS",
-      language: "Javascript",
-    },
-    {
-      value: "Express JS",
-      label: "Express JS",
-      language: "Javascript",
-    },
-    {
-      value: "Svelte",
-      label: "Svelte",
-      language: "Javascript",
-    },
-    {
-      value: "Vue Js",
-      label: "Vue Js",
-      language: "Javascript",
-    },
-    {
-      value: "Gatsby",
-      label: "Gatsby",
-      language: "Javascript",
-    },
-    {
-      value: "React JS",
-      label: "React JS",
-      language: "Javascript",
-    },
-    {
-      value: "Flask",
-      label: "Flask",
-      language: "Python",
-    },
-    {
-      value: "Django",
-      label: "Django",
-      language: "Python",
-    },
-  ];
   const initialState: State = {
     framework: {
       value: "",
@@ -159,18 +160,10 @@ const Settings = () => {
       label: "",
       value: "",
     },
-    frameworks: frameworks,
-    programmingLanugages: programmingLanugages,
+    frameworks: [],
+    programmingLanugages: [],
   };
-
-  const [state, dispatch] = useReducer(counterReducer, initialState);
-
-  const data = useMemo(() => {
-    return frameworks.filter(
-      (framework) => framework.language === state.language.value
-    );
-  }, [state]);
-
+  const [state, dispatch] = useReducer(reducer, initialState);
   return (
     <div className="container mx-auto p-5 flex flex-col gap-5">
       <div className="min-w-min">
@@ -200,7 +193,7 @@ const Settings = () => {
             isDisabled={state.language.label === ""}
             value={state.framework}
             onChange={(e) => dispatch({ type: "SET_FRAMEWORK", payload: e! })}
-            options={data}
+            options={state.frameworks}
             className="w-1/4"
             placeholder="Select a framework"
           />
