@@ -174,23 +174,37 @@ const Settings = () => {
   return (
     <div className="container mx-auto p-5 flex flex-col gap-5">
       <div className="min-w-min">
-        <Select
-          value={state.language}
-          onChange={(e) => dispatch({ type: "SET_LANGUAGE", payload: e! })}
-          options={programmingLanugages}
-          className="w-1/4"
-          placeholder="Select a programming language"
-        />
+        <div className="form-control">
+          <label htmlFor="language" className="label">
+            Language
+          </label>
+          <Select
+            id="language"
+            name="language"
+            value={state.language}
+            onChange={(e) => dispatch({ type: "SET_LANGUAGE", payload: e! })}
+            options={programmingLanugages}
+            className="w-1/4"
+            placeholder="Select a programming language"
+          />
+        </div>
       </div>
       <div>
-        <Select
-          isDisabled={state.language.label === ""}
-          value={state.framework}
-          onChange={(e) => dispatch({ type: "SET_FRAMEWORK", payload: e! })}
-          options={data}
-          className="w-1/4"
-          placeholder="Select a framework"
-        />
+        <div>
+          <label htmlFor="framework" className="label">
+            Framework / Library
+          </label>
+          <Select
+            name="framework"
+            id="framework"
+            isDisabled={state.language.label === ""}
+            value={state.framework}
+            onChange={(e) => dispatch({ type: "SET_FRAMEWORK", payload: e! })}
+            options={data}
+            className="w-1/4"
+            placeholder="Select a framework"
+          />
+        </div>
       </div>
     </div>
   );
